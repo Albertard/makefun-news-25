@@ -19,4 +19,8 @@ magic = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 if image[:8] != magic:
     raise SystemExit("entry.png is not a PNG file")
 os.makedirs(out_dir, exist_ok=True)
-Path(out_dir, "entry.png").write_bytes(image)
+out_path = Path(out_dir, "entry.png")
+out_path.write_bytes(image)
+# Verify the bytes on disk are exactly the source bytes before exiting.
+if out_path.read_bytes() != image:
+    raise SystemExit("written entry.png does not match source bytes")
